@@ -1,12 +1,16 @@
-workspace "ImGuiTemplate"
-	architecture "x64"
+workspace "ImGuiSDLTemplate"
 	configurations
 	{
 		"Debug",
 		"Release"
 	}
+	platforms
+	{
+		"Windows",
+		"Unix"
+	}
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}/%{cfg.system}"
 
 -- Include dirs relative to root folder
 IncludeDir = {}
@@ -15,9 +19,9 @@ IncludeDir["ImGuiBackends"]  = "Vendor/imgui/backends"
 IncludeDir["SDL3"] = "Vendor/SDL/include"
 
 LinkDir = {}
-LinkDir["SDL3"] = "Vendor/SDL/build/Release/SDL3"
+LinkDir["SDL3"] = "Vendor/SDL/build/Release/SDL3" -- Links static library for SDL3
 
-project "ImGuiTemplate"
+project "ImGuiSDLTemplate"
 	location "."
 	kind "ConsoleApp"
 	staticruntime "off"
@@ -33,6 +37,7 @@ project "ImGuiTemplate"
 		"src/**.h",
 		"Vendor/imgui/*.cpp",
 		"Vendor/imgui/*.h",
+		-- Include required imgui classes for SDL3 and OpenGL
 		"Vendor/imgui/backends/imgui_impl_sdl3.cpp",
 		"Vendor/imgui/backends/imgui_impl_sdl3.h",
 		"Vendor/imgui/backends/imgui_impl_opengl3.cpp",
@@ -53,9 +58,11 @@ project "ImGuiTemplate"
 	}
 		
 	filter { "system:windows" }
+		architecture "x86_64"
 		links { "OpenGL32" }
 
-	filter { "system:not windows" }
+	filter { "system:linux" }
+		architecture "x86_64"
 		links { "GL" }
 
 	filter "configurations:Debug"
