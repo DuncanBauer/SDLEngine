@@ -1,4 +1,4 @@
-workspace "ImGuiSDLTemplate"
+workspace "SDLEngine"
 	configurations
 	{
 		"Debug",
@@ -19,15 +19,14 @@ IncludeDir["ImGuiBackends"]  = "Vendor/imgui/backends"
 IncludeDir["SDL3"] = "Vendor/SDL/include"
 
 LinkDir = {}
-LinkDir["SDL3"] = "Vendor/SDL/build/Release/SDL3" -- Links static library for SDL3
+LinkDir["SDL3"] = "Vendor/SDL/build/%{cfg.buildcfg}/SDL3" -- Links static library for SDL3
 
-project "ImGuiSDLTemplate"
+project "SDLEngine"
 	location "."
 	kind "ConsoleApp"
 	staticruntime "off"
 	language "C++"
 	cppdialect "C++20"
-
 	targetdir ("bin/" .. outputdir)
 	objdir ("bin-int/" .. outputdir)
 
@@ -37,6 +36,7 @@ project "ImGuiSDLTemplate"
 		"src/**.h",
 		"Vendor/imgui/*.cpp",
 		"Vendor/imgui/*.h",
+		
 		-- Include required imgui classes for SDL3 and OpenGL
 		"Vendor/imgui/backends/imgui_impl_sdl3.cpp",
 		"Vendor/imgui/backends/imgui_impl_sdl3.h",
@@ -56,21 +56,37 @@ project "ImGuiSDLTemplate"
 	{
 		"%{LinkDir.SDL3}"
 	}
-		
-	filter { "system:windows" }
-		architecture "x86_64"
-		links { "OpenGL32" }
 
-	filter { "system:linux" }
+	filter "system:windows"
 		architecture "x86_64"
-		links { "GL" }
+		defines 
+		{
+			"_WIN32_WINNT=0x0601"
+		}
+		links
+		{
+			"OpenGL32"
+		}
+
+	filter "system:linux"
+		architecture "x86_64"
+		links
+		{
+			"GL"
+		}
 
 	filter "configurations:Debug"
-		defines "PA_DEBUG"
+      	defines 
+		{
+			"DEBUG"
+		}
 		runtime "Debug"
 		symbols "on"
 
 	filter "configurations:Release"
-		defines "PA_RELEASE"
+      	defines
+		{
+			"NDEBUG"
+		}
 		runtime "Release"
 		optimize "on"
