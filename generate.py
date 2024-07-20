@@ -21,6 +21,20 @@ subprocess.run(["cmake", "--build", ".", "--config", "{}".format(config)])
 os.chdir(root_directory)
 
 
+# Move to glm build directory
+os.chdir("Vendor/glm")
+if not os.path.exists("build"):
+    os.mkdir("build")
+os.chdir("build")
+
+# Build SDL3 libraries
+subprocess.run(["cmake", "-DCMAKE_BUILD_TYPE={}".format(config), ".."])
+subprocess.run(["cmake", "--build", ".", "--config", "{}".format(config)])
+
+# Return to root directory
+os.chdir(root_directory)
+
+
 # Create vs2022 solution
 if platform.system() == "Windows":
     subprocess.run(["Vendor/binaries/premake5.exe", "vs2022"])
