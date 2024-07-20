@@ -18,12 +18,15 @@ IncludeDir["glad"]			= "Vendor/glad/include"
 IncludeDir["glm"]			= "Vendor/glm"
 IncludeDir["ImGui"]			= "Vendor/imgui"
 IncludeDir["ImGuiBackends"]	= "Vendor/imgui/backends"
-IncludeDir["SDL3"]			= "Vendor/SDL/include"
+IncludeDir["SDL2"]			= "Vendor/SDL/include"
 IncludeDir["spdlog"]		= "Vendor/spdlog/include"
 
 LinkDir = {}
 LinkDir["glm"] 	= "Vendor/glm/build/glm/%{cfg.buildcfg}/glm"
-LinkDir["SDL3"] = "Vendor/SDL/build/%{cfg.buildcfg}/SDL3"
+LinkDir["SDL2"] = "Vendor/SDL/build/%{cfg.buildcfg}/SDL2"
+LinkDir["SDL2d"] = "Vendor/SDL/build/%{cfg.buildcfg}/SDL2d"
+LinkDir["SDL2main"] = "Vendor/SDL/build/%{cfg.buildcfg}/SDL2main"
+LinkDir["SDL2maind"] = "Vendor/SDL/build/%{cfg.buildcfg}/SDL2maind"
 
 project "SDLEngine"
 	location "."
@@ -40,16 +43,6 @@ project "SDLEngine"
 		"src/**.h",
 
 		"Vendor/glad/src/glad.c",
-		
-		"Vendor/imgui/*.cpp",
-		-- "Vendor/imgui/*.h",
-		
-		-- Include required imgui classes for SDL3 and OpenGL
-		"Vendor/imgui/backends/imgui_impl_sdl3.cpp",
-		-- "Vendor/imgui/backends/imgui_impl_sdl3.h",
-		"Vendor/imgui/backends/imgui_impl_opengl3.cpp",
-		-- "Vendor/imgui/backends/imgui_impl_opengl3.h",
-		-- "Vendor/imgui/backends/imgui_impl_opengl3_loader.h",
 	}
 
 	includedirs
@@ -58,14 +51,13 @@ project "SDLEngine"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.ImGuiBackends}",
-		"%{IncludeDir.SDL3}",
+		"%{IncludeDir.SDL2}",
 		"%{IncludeDir.spdlog}"
 	}
 
 	links
 	{
 		"%{LinkDir.glm}",
-		"%{LinkDir.SDL3}"
 	}
 
 	filter "system:windows"
@@ -91,6 +83,11 @@ project "SDLEngine"
 		{
 			"DEBUG"
 		}
+		links
+		{
+			"%{LinkDir.SDL2d}",
+			"%{LinkDir.SDL2maind}"
+		}
 		runtime "Debug"
 		symbols "on"
 
@@ -98,6 +95,11 @@ project "SDLEngine"
       	defines
 		{
 			"NDEBUG"
+		}
+		links
+		{
+			"%{LinkDir.SDL2}",
+			"%{LinkDir.SDL2main}"
 		}
 		runtime "Release"
 		optimize "on"

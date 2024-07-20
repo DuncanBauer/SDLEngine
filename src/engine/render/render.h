@@ -1,14 +1,14 @@
 #pragma once
 
-#include <SDL3/SDL.h>
+#include <SDL.h>
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
 typedef struct render_state
 {
     SDL_Window* window;
-    float width;
-    float height;
+    uint32_t width;
+    uint32_t height;
 } Render_State;
 
 void render_init();
